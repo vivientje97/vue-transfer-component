@@ -6,7 +6,7 @@
           >Source ({{ filters.length }})</span
         >
       </div>
-      <div class="checkbox-select__dropdown">
+      <div>
         <div class="checkbox-select__search-wrapp">
           <input type="text" placeholder="search filters..." v-model="search" />
         </div>
@@ -33,6 +33,7 @@
                 v-model="checkedFilters"
                 :value="filter"
                 type="checkbox"
+                :checked="selectAll"
               />
               <label :for="index">{{ filter }}</label>
             </div>
@@ -42,8 +43,8 @@
     </div>
 
     <div class="middle">
-      <button @click="moveRight">&gt;</button>
-      <button @click="moveLeft">&lt;</button>
+      <button @click="moveRight">&#8250;</button>
+      <button @click="moveLeft">&#8249;</button>
     </div>
 
     <div id="app" class="checkbox-select in_container">
@@ -187,11 +188,9 @@ export default {
 </script>
 <style>
 .container {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -206,7 +205,6 @@ export default {
   margin: 5px;
 }
 .checkbox-select {
-  flex: 1 1 auto;
   border: 1px solid #ddd;
   background: #f9f9f9;
   border-radius: 3px;
@@ -222,8 +220,18 @@ export default {
   overflow-y: auto;
   padding: 10px;
 }
-.vue-list-picker .list-picker-panel {
-  min-height: 400px;
-  overflow-y: auto;
+.checkbox-select__select-all{
+    padding: 5px 0px;
+}
+.checkbox-select__select-all label input{
+  position: relative;
+  cursor: pointer;
+}
+.checkbox-select__select-all input {
+  display: none;
+}
+.checkbox-select__select-all label, .checkbox-select__title, button{
+  font-size: 16px;
+  font-weight: 500;
 }
 </style>
