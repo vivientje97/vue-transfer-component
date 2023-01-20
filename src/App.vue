@@ -1,6 +1,14 @@
 <template>
   <div id="app">
-    <transfer />
+    <transfer
+    leftTitle="Source"
+    rightTitle="Target"
+    :filters="leftData"
+    :filtersRight="rightData"
+    :showItemCount="true"
+    :showSelectCount="true"
+    :showSelectAll="true"
+    />
   </div>
 </template>
 
@@ -12,6 +20,25 @@ export default {
   components: {
     transfer
   },
+  data() {
+    return {
+      leftData: [
+        'Campina',
+        'Douwe Egberts',
+        'Coca-Cola',
+        'Heineken',
+        'Unox',
+        'Dr Oetker',
+        'Amstel',
+        'Knorr',
+        'Lipton',
+        'Spa',
+        'Heinz',
+        'Calvé',
+      ],
+      rightData: [],
+    }
+  }
 }
 </script>
 

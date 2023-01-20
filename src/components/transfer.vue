@@ -2,17 +2,16 @@
   <div class="container">
     <div class="checkbox-select in_container">
       <div class="checkbox-select__trigger">
-        <span class="checkbox-select__title"
-          >Source ({{ filters.length }})</span
-        >
+        <span class="checkbox-select__title">
+          {{ leftTitle }}
+        </span>
       </div>
-      <div>
-        <div class="checkbox-select__search-wrapp">
-          <input type="text" placeholder="search filters..." v-model="search" />
-        </div>
-        <div class="checkbox-select__col">
-          <div class="checkbox-select__select-all" v-model="selectAll">
-            <label for="selectAll">{{ selectAllText }}</label>
+      <div class="checkbox-select__wrap">
+        <div v-show="showSelectAll" class="checkbox-select__col">
+          <div class="checkbox-select__select-all" v-model="selectAll">          
+            <label for="selectAll">
+              {{ selectAllText }}
+            </label>
             <input
               type="checkbox"
               id="selectAll"
@@ -20,24 +19,34 @@
               v-model="allSelected"
             />
           </div>
-          <div class="checkbox-select__info">
-            {{ checkedFilters.length }} SELECTED
-          </div>
         </div>
-        <div id="customScroll" class="checkbox-select__filters-wrapp">
-          <div v-for="(filter, index) in filteredList">
+        <div class="checkbox-select__search-wrapp">
+          <input 
+            type="text" 
+            placeholder="Search.." 
+            class="searchTerm" 
+            v-model="search" 
+          />
+        </div>
+        <div id="customScroll">       
+          <div v-for="filter in filteredList">
             <div class="checkbox-select__check-wrapp">
               <input
-                :id="index"
                 class="conditions-check"
+                :id="filter"
                 v-model="checkedFilters"
                 :value="filter"
                 type="checkbox"
-                :checked="selectAll"
               />
-              <label :for="index">{{ filter }}</label>
+              <label :for="filter">
+                {{ filter }}
+              </label>
             </div>
           </div>
+        </div>
+        <div class="checkbox-select__info">
+        <label v-show="showSelectCount" class="checkbox-select-count">{{ checkedFilters.length }} SELECTED</label>
+        <label v-show="showItemCount" class="checkbox-item-count">{{ filters.length }} ITEMS</label>
         </div>
       </div>
     </div>
@@ -49,21 +58,16 @@
 
     <div id="app" class="checkbox-select in_container">
       <div class="checkbox-select__trigger">
-        <span class="checkbox-select__title"
-          >Target ({{ filtersRight.length }})</span
-        >
+        <span class="checkbox-select__title">
+          {{ rightTitle }}
+        </span>
       </div>
       <div>
-        <div class="checkbox-select__search-wrapp">
-          <input
-            type="text"
-            placeholder="search filters..."
-            v-model="searchRight"
-          />
-        </div>
-        <div class="checkbox-select__col">
+        <div v-show="showSelectAll" class="checkbox-select__col">
           <div class="checkbox-select__select-all" v-model="selectAllRight">
-            <label for="selectAllRight">{{ selectAllTextRight }}</label>
+            <label for="selectAllRight">
+              {{ selectAllTextRight }}
+            <label>
             <input
               type="checkbox"
               id="selectAllRight"
@@ -71,23 +75,34 @@
               v-model="allSelectedRight"
             />
           </div>
-          <div class="checkbox-select__info">
-            {{ checkedFiltersRight.length }} SELECTED
-          </div>
         </div>
-        <div id="customScrollRight" class="checkbox-select__filters-wrapp">
-          <div v-for="(filterRight, indexRight) in filteredListRight">
+        <div class="checkbox-select__search-wrapp">
+          <input
+            type="text"
+            placeholder="Search.."
+            v-model="searchRight"
+            class="searchTerm"
+          />
+        </div>
+        <div id="customScroll">
+          <div v-for="filterRight in filteredListRight">
             <div class="checkbox-select__check-wrapp_Right">
               <input
-                :id="indexRight"
-                class="conditions-check"
+                :id="filterRight"
+                class="conditions-check-right"
                 v-model="checkedFiltersRight"
                 :value="filterRight"
                 type="checkbox"
               />
-              <label :for="indexRight">{{ filterRight }}</label>
+              <label :for="filterRight">
+                {{ filterRight }}
+              </label>
             </div>
           </div>
+        </div>
+         <div class="checkbox-select__info">
+        <label v-show="showSelectCount" class="checkbox-select-count">{{ checkedFiltersRight.length }} SELECTED</label>
+        <label v-show="showItemCount"  class="checkbox-item-count">{{ filtersRight.length }} ITEMS</label>
         </div>
       </div>
     </div>
@@ -98,26 +113,38 @@
 export default {
   name: 'transfer',
   props: {
-    msg: String,
+    leftTitle: {
+      type: String,
+      required: true
+    },
+    rightTitle: {
+      type: String,
+      required: true
+    },
+    filters: {
+      type: Array,
+      required: true
+    },
+    filtersRight: {
+      type: Array,
+      required: true
+    },
+    showSelectCount: {
+    type: Boolean,
+    default: false
+    },
+    showItemCount: {
+    type: Boolean,
+    default: false
+    },
+    showSelectAll: {
+    type: Boolean,
+    default: false
+    },
   },
 
   data() {
     return {
-      filters: [
-        'Bungalow',
-        'Chalet',
-        'Guesthouse',
-        'Hotel',
-        'Townhouse',
-        'Apartment',
-        'Boutique hotel',
-        'Cabin',
-        'Guest suite',
-        'Hostel',
-        'Loft',
-        'Villa',
-      ],
-      filtersRight: [],
       search: '',
       searchRight: '',
       checkedFilters: [],
@@ -142,29 +169,29 @@ export default {
   },
   methods: {
     selectAll: function () {
+      this.allSelected = !this.allSelected;
       this.checkedFilters = [];
       this.selectAllText =
         this.selectAllText == 'Select All' ? 'Clear All' : 'Select All';
       if (this.allSelected) {
-        for (filter in this.filters) {
-          this.checkedFilters.push(this.filters[filter].toString());
+        for (let filter in this.filteredList) {
+          this.checkedFilters.push(this.filteredList[filter].toString());
         }
       }
     },
-
     selectAllRight: function () {
+      this.allSelectedRight = !this.allSelectedRight;
       this.checkedFiltersRight = [];
       this.selectAllTextRight =
         this.selectAllTextRight == 'Select All' ? 'Clear All' : 'Select All';
       if (this.allSelectedRight) {
-        for (filterRight in this.filtersRight) {
+        for (let filterRight in this.filteredListRight) {
           this.checkedFiltersRight.push(
-            this.filtersRight[filterRight].toString()
+            this.filteredListRight[filterRight].toString()
           );
         }
       }
     },
-
     moveRight() {
       if (!this.checkedFilters.length) return;
       for (let i = this.checkedFilters.length; i > 0; i--) {
@@ -181,11 +208,13 @@ export default {
         this.filtersRight.splice(idx, 1);
         this.filters.push(this.checkedFiltersRight[i - 1]);
         this.checkedFiltersRight.pop();
+        
       }
     },
   },
 };
 </script>
+
 <style>
 .container {
   font-family: 'Segoe UI', 'Roboto', 'Oxygen',
@@ -203,35 +232,67 @@ export default {
   align-items: center;
   justify-content: center;
   margin: 5px;
+  background-color: #EE7200;
+  color: #fff;
+  border: none;
 }
 .checkbox-select {
   border: 1px solid #ddd;
   background: #f9f9f9;
-  border-radius: 3px;
   overflow: auto;
   display: flex;
   flex-direction: column;
-  margin: 20px;
+  margin: 10px;
+}
+#customScroll{
+  min-height: 150px;
+  max-height: 150px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px solid #ddd;
+  border-top: none;
+  background-color: #fff;
 }
 .in_container {
-  max-width: 0px;
-  min-width: 180px;
-  min-height: 400px;
-  overflow-y: auto;
-  padding: 10px;
+  min-height: 150px;
+  min-width: 175px;
+  padding: 8px;
 }
 .checkbox-select__select-all{
-    padding: 5px 0px;
+    border-top: 1px solid #ddd;
 }
-.checkbox-select__select-all label input{
-  position: relative;
+.searchTerm{
+  border: 1px solid #ddd;
+  border-bottom: none;
+  height: 20px;
+}
+.checkbox-select__select-all label{
   cursor: pointer;
 }
-.checkbox-select__select-all input {
+/* .checkbox-select__select-all input {
   display: none;
-}
-.checkbox-select__select-all label, .checkbox-select__title, button{
-  font-size: 16px;
+} */
+.checkbox-select__title, button{
+  font-size: 17px;
   font-weight: 500;
+}
+.checkbox-select__select-all, .searchTerm, #customScroll{
+  padding: 5px 5px 1px 5px;
+}
+.checkbox-select__trigger{
+  padding: 0px 5px 5px 5px;
+}
+.checkbox-select__info{
+  margin-top: 8px;
+  font-size: 11px;
+}
+.checkbox-select__info{
+  padding: 0px 5px;
+}
+.checkbox-select-count{
+  float: left;
+}
+.checkbox-item-count{
+  float: right;
 }
 </style>
