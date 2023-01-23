@@ -265,6 +265,7 @@ export default {
   border: 1px solid #ddd;
   border-bottom: none;
   height: 20px;
+  min-width: 163px;
 }
 .checkbox-select__select-all label{
   cursor: pointer;
